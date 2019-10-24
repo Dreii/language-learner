@@ -1,7 +1,6 @@
 import React, {useState, useRef} from 'react'
 import { Dimensions, View, Text, StyleSheet } from 'react-native'
 import WriteBoard from '../components/WriteBoard'
-import SavedImages from '../components/SavedImages'
 
 import { takeSnapshotAsync } from 'expo'
 
@@ -28,19 +27,16 @@ const WritePage = ({}) => {
 
   return (
     <View style={styles.container}>
-      <Text>Write page</Text>
       <WriteBoard
         ref={writeBoard}
         drawnPaths={drawnPaths}
         setDrawnPaths={setDrawnPaths}
-        containerStyle={{ backgroundColor: '#FFF', marginTop: 10 }}
+        containerStyle={{ backgroundColor: 'transparent', marginTop: 10 }}
         width={Dimensions.get('window').width - 20}
-        height={Dimensions.get('window').width - 20}
+        height={Dimensions.get('window').height - 20}
         color={'#4d4d4d'}
         strokeWidth={4}
       />
-
-      <SavedImages images={savedImages} />
     </View>
   )
 }

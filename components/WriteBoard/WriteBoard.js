@@ -7,7 +7,9 @@ class WriteBoard extends Component {
   state = {
     currentMax: 0,
     currentPoints: [],
-    reaction: new Reaction()
+    reaction: new Reaction(),
+    brushCoords: [0, 0],
+    brushing: false
   }
 
   _panResponder = PanResponder.create({
@@ -18,25 +20,30 @@ class WriteBoard extends Component {
     onPanResponderRelease: (evt, gs) => this.onResponderRelease(evt, gs)
   })
 
-  onTouch = (evt) => {
-    let [x, y] = [evt.nativeEvent.pageX, evt.nativeEvent.pageY]
-    const newCurrentPoints = this.state.currentPoints
-    newCurrentPoints.push({ x, y })
+    onTouch = (evt) => {
+        let [x, y] = [evt.nativeEvent.pageX, evt.nativeEvent.pageY]
+        const newCurrentPoints = this.state.currentPoints
+        newCurrentPoints.push({ x, y })
 
-    this.setState({
-      drawnPaths: this.props.drawnPaths,
-      currentPoints: newCurrentPoints,
-      currentMax: this.state.currentMax
-    })
-  }
+        newCurrentPoints.length && !this.state.brushing && this.setState({brushing: true})
+
+        this.setState({brushCoords: [x, y]})
+
+        this.setState({
+        drawnPaths: this.props.drawnPaths,
+        currentPoints: newCurrentPoints,
+        currentMax: this.state.currentMax
+        })
+    }
 
   onResponderGrant = (evt) => this.onTouch(evt)
 
   onResponderMove = (evt) => this.onTouch(evt)
 
-  onResponderRelease = () => {'WriteBoard.js'
+  onResponderRelease = () => {
 
   const newPaths = this.props.drawnPaths
+  console.log(this.state.currentPoints)
   if (this.state.currentPoints.length > 0) {
     // Cache the shape object so that we aren't testing
     // whether or not it changed too many components?
@@ -50,8 +57,6 @@ class WriteBoard extends Component {
       />
     )
   }
-
-  this.state.reaction.addGesture(this.state.currentPoints)
 
   this.setState({
     currentPoints: [],
@@ -67,39 +72,38 @@ _onLayoutContainer = (e) => {
 
   render() {
     return (
-      <View
-        onLayout={this._onLayoutContainer}
-        style={[
-          styles.drawContainer,
-          this.props.containerStyle,
-          { width: this.props.width, height: this.props.height }
-        ]}
-      >
-
-        <View {...this._panResponder.panHandlers}>
-          <Svg
-            style={styles.drawSurface}
-            width={this.props.width}
-            height={this.props.height}
-          >
-            <G>
-              {this.props.donePaths}
-              <Path
+        <View
+            onLayout={this._onLayoutContainer}
+            style={[
+                styles.drawContainer,
+                this.props.containerStyle,
+                { width: this.props.width, height: this.props.height }
+            ]}
+            {...this._panResponder.panHandlers}
+        >
+            <View>
+            <Svg
+                style={styles.drawSurface}
+                width={this.props.width}
+                height={this.props.height}
+            >
+                <G>
+                    {this.props.drawnPaths}
+                </G>
+                <Path
                 key={this.state.currentMax}
                 d={this.state.reaction.pointsToSvg(this.state.currentPoints)}
                 stroke={this.props.color}
                 strokeWidth={this.props.strokeWidth - 1}
                 strokeOpacity={0.5}
                 fill="none"
-              />
-            </G>
-          </Svg>
-
-          {this.props.children}
+                />
+            </Svg>
+            {this.props.children}
+            </View>
         </View>
-      </View>
-    )
-  }
+        )
+    }
 
 }
 
