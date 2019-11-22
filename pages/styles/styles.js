@@ -1,7 +1,14 @@
 import { StyleSheet } from 'react-native'
 
-export const ButtonStyles = StyleSheet.create({
+export const inputStyles = StyleSheet.create({
     button: {
-        marginBottom: 6
+        borderWidth: 0.5,
+        borderColor: '#000000',
+        marginBottom: '6px'
+    },
+    text: {
+        borderWidth: 0.5,
+        borderColor: '#000000',
+        marginBottom: '6px'
     }
 })
